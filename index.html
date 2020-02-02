@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+    <head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+	
+	<div id="app">
+	    <h1>Units</h1>
+	    <table class="table table-md table-striped table-bordered">
+		<thead>
+		    <tr>
+			<th v-for="header in units.stat_names">{{ header }}</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr v-for="unit in units.list">
+			<th class="text-nowrap">{{ unit.name }}</th>
+			<td>{{ unit.m }}&#34;</td>
+			<td>{{ unit.ws }}+</td>
+			<td>{{ unit.bs }}+</td>
+			<td>{{ unit.s }}</td>
+			<td>{{ unit.t }}</td>
+			<td>{{ unit.w }}</td>
+			<td>{{ unit.a }}</td>
+			<td>{{ unit.ld }}</td>
+			<td>{{ unit.sv }}+</td>
+			<td>{{ unit.max || '-' }}</td>
+			<td>{{ unit['point cost'] }}</td>
+			<td>
+			    <ul>
+				<li v-for="weapon in unit['armed with']">{{ weapon.toTitle() }}</li>
+			    </ul>
+			</td>
+			<td>
+			    <ul>
+				<li v-for="option in unit['replacements']">
+				    Add
+				    <template v-if="Array.isArray( option.add )">
+					<ul>
+					    <li v-for="weapon in option.add">
+						{{ Array.isArray(weapon) ? weapon.map(s => s.toTitle()).join(', ') : weapon.toTitle() }}
+					    </li>
+					</ul>
+				    </template>
+				    <template v-else>
+					<ol>
+					    <li v-for="list in option.add">
+						{{ list.map(s => s.toTitle()).join(', ') }}
+					    </li>
+					</ol>
+				    </template>
+				    Remove
+				    <ul>
+					<li v-for="weapon in option.sub">{{ weapon.toTitle() }}</li>
+				    </ul>
+				</li>
+			    </ul>
+			</td>
+		    </tr>
+		</tbody>
+	    </table>
+	    
+	    <h1>Weapons</h1>
+	    <table class="table table-md table-striped table-bordered">
+		<thead>
+		    <tr>
+			<th v-for="header in weapons.stat_names">{{ header }}</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <template v-for="weapon in weapons.list">
+			<tr v-if="!weapon.options">
+			    <th class="text-nowrap">{{ weapon.name }}</th>
+			    <td>{{ weapon.range }}{{ typeof weapon.range === 'number' ? '&#34;' : '' }}</td>
+			    <td class="text-nowrap">{{ weapon.type }}</td>
+			    <td>{{ weapon.s }}</td>
+			    <td>{{ weapon.ap }}</td>
+			    <td>{{ weapon.d }}</td>
+			    <td v-html="weapon.abilities || '-'"></td>
+			    <td>{{ weapon['point cost'] }}</td>
+			</tr>
+			
+			<tr v-if="weapon.options">
+			    <th class="text-nowrap">{{ weapon.name }}</th>
+			    <td colspan="6" v-html="weapon.description || '-'"></td>
+			    <td>{{ weapon['point cost'] }}</td>
+			</tr>
+			<tr v-if="weapon.options"
+			    v-for="option in weapon.options">
+			    <td class="text-nowrap"> &#8212; {{ option.name }}</td>
+			    <td class="text-nowrap">{{ option.range }}{{ typeof option.range === 'number' ? '&#34;' : '' }}</td>
+			    <td>{{ option.type }}</td>
+			    <td>{{ option.s }}</td>
+			    <td>{{ option.ap }}</td>
+			    <td>{{ option.d }}</td>
+			    <td v-html="option.abilities || '-'"></td>
+			    <td></td>
+			</tr>
+		    </template>
+		</tbody>
+	    </table>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	
+	<script type="text/javascript" src="app.js"></script>
+    </body>
+</html>
